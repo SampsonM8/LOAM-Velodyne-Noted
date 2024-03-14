@@ -696,6 +696,8 @@ void BasicLaserMapping::optimizeTransformTobeMapped()
             matD1 = esolver.eigenvalues().real();
             matV1 = esolver.eigenvectors().real();
 
+            // 误差cost 雅各比矩阵求解， 下面这部分是点和线匹配 
+
             if (matD1(0, 2) > 3 * matD1(0, 1))
             {
 
@@ -727,7 +729,7 @@ void BasicLaserMapping::optimizeTransformTobeMapped()
                float lc = -((x1 - x2)*((x0 - x1)*(z0 - z2) - (x0 - x2)*(z0 - z1))
                             + (y1 - y2)*((y0 - y1)*(z0 - z2) - (y0 - y2)*(z0 - z1))) / a012 / l12;
 
-               float ld2 = a012 / l12;
+               float ld2 = a012 / l12;  // 面积除以底边长 等于 点到直线距离
 
 //                // TODO: Why writing to a variable that's never read? Maybe it should be used afterwards?
 //                pointProj = pointSel;
@@ -750,7 +752,7 @@ void BasicLaserMapping::optimizeTransformTobeMapped()
             }
          }
       }
-
+      // 点和面匹配 （对于旋转部分，采用的是欧拉角）
       for (int i = 0; i < laserCloudSurfStackNum; i++)
       {
          pointOri = _laserCloudSurfStackDS->points[i];
